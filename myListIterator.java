@@ -2,6 +2,7 @@ import java.util.ListIterator;
 
 public class myListIterator implements ListIterator<Fraction>
 {
+    // fields copied from ArrayList's implementation of ListIterator
     final myArrayList owner;
     int cursor;       // index of next element to return
     int lastRet = -1; // index of last element returned; -1 if no such
@@ -89,11 +90,12 @@ public class myListIterator implements ListIterator<Fraction>
      * @return the index of the element that would be returned by a
      * subsequent call to {@code next}, or list size if the list
      * iterator is at the end of the list
+     *
+     * @since 25 September 2023
+     * @author Julian Edwards
      */
     @Override
-    public int nextIndex() {
-        return 0;
-    }
+    public int nextIndex() { return cursor; }
 
     /**
      * Returns the index of the element that would be returned by a
@@ -103,11 +105,12 @@ public class myListIterator implements ListIterator<Fraction>
      * @return the index of the element that would be returned by a
      * subsequent call to {@code previous}, or -1 if the list
      * iterator is at the beginning of the list
+     *
+     * @since 25 September 2023
+     * @author Julian Edwards
      */
     @Override
-    public int previousIndex() {
-        return 0;
-    }
+    public int previousIndex() { return cursor - 1; }
 
     /**
      * Removes from the list the last element that was returned by {@link
@@ -147,19 +150,21 @@ public class myListIterator implements ListIterator<Fraction>
      *                                       {@code previous} have been called, or {@code remove} or
      *                                       {@code add} have been called after the last call to
      *                                       {@code next} or {@code previous}
+     * @since 25 September 2023
+     * @author Julian Edwards
      */
     @Override
     public void set(Fraction fraction) {
-
+        throw new UnsupportedOperationException("Not used by the Lab2 assignment.");
     }
 
     /**
      * Inserts the specified element into the list (optional operation).
      * The element is inserted immediately before the element that
      * would be returned by {@link #next}, if any, and after the element
-     * that would be returned by {@link #previous}, if any.  (If the
+     * that would be returned by {@link #previous}, if any. (If the
      * list contains no elements, the new element becomes the sole element
-     * on the list.)  The new element is inserted before the implicit
+     * on the list.) The new element is inserted before the implicit
      * cursor: a subsequent call to {@code next} would be unaffected, and a
      * subsequent call to {@code previous} would return the new element.
      * (This call increases by one the value that would be returned by a
@@ -176,5 +181,58 @@ public class myListIterator implements ListIterator<Fraction>
     @Override
     public void add(Fraction fraction) {
 
+    }
+
+    /**
+     * Inserts the specified elements into the list (optional operation).
+     * The elements are inserted immediately before the element that
+     * would be returned by {@link #next}, if any, and after the element
+     * that would be returned by {@link #previous}, if any. (If the
+     * list contains no elements, the new elements becomes the sole elements
+     * on the list.) The new elements are inserted before the implicit
+     * cursor: a subsequent call to {@code next} would be unaffected, and a
+     * subsequent call to {@code previous} would return the last new element.
+     * (This call increases by {@code fractions.length} the value that would be returned by a
+     * call to {@code nextIndex} or {@code previousIndex}.)
+     *
+     * @param fractions the elements to insert
+     * @throws UnsupportedOperationException if the {@code add} method is
+     *                                       not supported by this list iterator
+     * @throws ClassCastException            if the class of the specified element
+     *                                       prevents it from being added to this list
+     * @throws IllegalArgumentException      if some aspect of the elements
+     *                                       prevent them from being added to this list
+     * @since 25 September 2023
+     * @author Julian Edwards
+     */
+    public void addAll(Fraction[] fractions) {
+        for(final Fraction fraction : fractions) add(fraction);
+    }
+
+    /**
+     * Removes from the list all elements after the element that would
+     * be returned by {@link #next} (optional operation). This call can
+     * only be made once per call to {@code next} or {@code previous}.
+     * It can be made only if {@link #add} has not been
+     * called after the last call to {@code next} or {@code previous}.
+     *
+     * @throws UnsupportedOperationException if the {@code remove}
+     *                                       operation is not supported by this list iterator
+     * @throws IllegalStateException         if neither {@code next} nor
+     *                                       {@code previous} have been called, or {@code remove} or
+     *                                       {@code add} have been called after the last call to
+     *                                       {@code next} or {@code previous}
+     * @since 25 September 2023
+     * @author Julian Edwards
+     */
+    public void removeAllNext() {
+        if(hasNext()) next(); // set cursor to next value, so the built-in remove method can be used.
+        else return; // no elements after current cursor, method cannot be called.
+        while(hasNext()) {  // remove all elements after the selected one.
+            next();
+            remove();
+        }
+
+        previous(); // set cursor back to the starting value (prior to this method being called).
     }
 }
