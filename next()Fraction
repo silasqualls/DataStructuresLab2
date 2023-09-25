@@ -1,0 +1,6 @@
+ public Fraction next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        return myArrayList.get(currentIndex++);
+    }
