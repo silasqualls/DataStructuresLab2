@@ -1,2 +1,22 @@
 # DataStructuresLab2
-Lab2M
+
+Silas tasks:
+main:
+make list Iterator
+
+Julian tasks:
+addAll()
+removeAll()
+
+Mohamed tasks:
+hasNext()
+hasPrevious()
+
+Herve tasks:
+next()
+previous()
+
+
+
+
+
