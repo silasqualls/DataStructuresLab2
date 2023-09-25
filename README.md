@@ -3,7 +3,7 @@
 Silas tasks:
 main:
 make list Iterator
-
+previous() 
 Julian tasks:
 addAll()
 removeAll()
@@ -14,7 +14,7 @@ hasPrevious()
 
 Herve tasks:
 next()
-previous()
+
 
 
 
