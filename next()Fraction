@@ -2,5 +2,5 @@
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return myArrayList.get(currentIndex++);
+        return myArrayList.get(cursor++);
     }
