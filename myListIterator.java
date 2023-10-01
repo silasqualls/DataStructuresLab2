@@ -46,9 +46,14 @@ public class myListIterator implements ListIterator<Fraction>
      * @return the next element in the list
      * @throws NoSuchElementException if the iteration has no next element
      */
+
+//Code by Herve
     @Override
-    public Fraction next() {
-        return null;
+   public Fraction next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        return myArrayList.get(cursor++);
     }
 
     /**
