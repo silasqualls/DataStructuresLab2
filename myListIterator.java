@@ -83,8 +83,15 @@ public class myListIterator implements ListIterator<Fraction>
      *                                element
      */
     @Override
+        //Code by Silas
     public Fraction previous() {
-        return null;
+        if (cursor <= 0) {
+            throw new NoSuchElementException("No previous element");
+        }
+        int previousIndex = cursor - 1;
+        lastRet = previousIndex;
+        cursor = previousIndex;
+        return owner.get(previousIndex);
     }
 
     /**
