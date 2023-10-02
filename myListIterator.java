@@ -29,11 +29,11 @@ public class myListIterator implements ListIterator<Fraction>
      * @return {@code true} if the list iterator has more elements when
      * traversing the list in the forward direction
      */
+    // code by Mohamed   
     @Override
     public boolean hasNext() {
-        return false;
+        return cursor < owner.size();
     }
-
     /**
      * Returns the next element in the list and advances the cursor position.
      * This method may be called repeatedly to iterate through the list,
@@ -44,9 +44,14 @@ public class myListIterator implements ListIterator<Fraction>
      * @return the next element in the list
      * @throws NoSuchElementException if the iteration has no next element
      */
+
+//Code by Herve
     @Override
-    public Fraction next() {
-        return null;
+   public Fraction next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        return myArrayList.get(cursor++);
     }
 
     /**
@@ -58,9 +63,10 @@ public class myListIterator implements ListIterator<Fraction>
      * @return {@code true} if the list iterator has more elements when
      * traversing the list in the reverse direction
      */
+    // code by Mohamed
     @Override
     public boolean hasPrevious() {
-        return false;
+        return cursor > 0;
     }
 
     /**
@@ -76,8 +82,15 @@ public class myListIterator implements ListIterator<Fraction>
      *                                element
      */
     @Override
+        //Code by Silas
     public Fraction previous() {
-        return null;
+        if (cursor <= 0) {
+            throw new NoSuchElementException("No previous element");
+        }
+        int previousIndex = cursor - 1;
+        lastRet = previousIndex;
+        cursor = previousIndex;
+        return owner.get(previousIndex);
     }
 
     /**
