@@ -67,10 +67,10 @@ import java.util.NoSuchElementException;
      * @return {@code true} if the list iterator has more elements when
      * traversing the list in the forward direction
      */
-    @Override
     //Code by Mohamed
+    @Override
     public boolean hasNext() {
-        return false;
+        return cursor < owner.size();
     }
 
     /**
