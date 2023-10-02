@@ -31,12 +31,11 @@ public class myListIterator implements ListIterator<Fraction>
      * @return {@code true} if the list iterator has more elements when
      * traversing the list in the forward direction
      */
-    // code by Mohamed
+    // code by Mohamed   
     @Override
     public boolean hasNext() {
         return cursor < owner.size();
     }
-
     /**
      * Returns the next element in the list and advances the cursor position.
      * This method may be called repeatedly to iterate through the list,
