@@ -1,24 +1,22 @@
+import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 public class myListIterator implements ListIterator<Fraction>
 {
-    // fields copied from ArrayList's implementation of ListIterator
     final myArrayList owner;
     int cursor;       // index of next element to return
-    int lastRet = -1; // index of last element returned; -1 if no such
-    int modCount;
-    int expectedModCount;
+    int lastRet = -1; // index of last element returned; -1 if none
+    int expectedModCount; // used to prevent a desync between this iterator and its owner
 
-    // ArrayList has a field called modCount, pass that in here.
-    myListIterator(myArrayList ownerIn, int modCountIn) {
+    myListIterator(final myArrayList ownerIn) {
         owner = ownerIn;
-        modCount = modCountIn;
-        expectedModCount = modCountIn;
+        expectedModCount = owner.getModCount();
     }
 
-    // ArrayList has a field called modCount, pass that in here.
-    myListIterator(myArrayList ownerIn, int modCountIn, int startIndexIn) {
-        this(ownerIn, modCountIn);
+    myListIterator(final myArrayList ownerIn, int startIndexIn) {
+        this(ownerIn);
         cursor = startIndexIn;
     }
 
@@ -138,10 +136,23 @@ public class myListIterator implements ListIterator<Fraction>
      *                                       {@code previous} have been called, or {@code remove} or
      *                                       {@code add} have been called after the last call to
      *                                       {@code next} or {@code previous}
+     *
+     * @since 1 October 2023
+     * @author Julian Edwards
      */
     @Override
     public void remove() {
+        if(lastRet < 0) throw new IllegalStateException();
+        else if(expectedModCount != owner.getModCount()) throw new ConcurrentModificationException();
 
+        try {
+            owner.remove(lastRet);
+            cursor = lastRet;
+            lastRet = -1;
+            expectedModCount = owner.getModCount();
+        }
+
+        catch(final IndexOutOfBoundsException e) { throw new ConcurrentModificationException(); }
     }
 
     /**
@@ -167,7 +178,7 @@ public class myListIterator implements ListIterator<Fraction>
      * @author Julian Edwards
      */
     @Override
-    public void set(Fraction fraction) {
+    public void set(final Fraction fraction) {
         throw new UnsupportedOperationException("Not used by the Lab2 assignment.");
     }
 
@@ -190,10 +201,20 @@ public class myListIterator implements ListIterator<Fraction>
      *                                       prevents it from being added to this list
      * @throws IllegalArgumentException      if some aspect of this element
      *                                       prevents it from being added to this list
+     *
+     * @since 1 October 2023
+     * @author Julian Edwards
      */
     @Override
-    public void add(Fraction fraction) {
+    public void add(final Fraction fraction) {
+        if(expectedModCount != owner.getModCount()) throw new ConcurrentModificationException();
+        try {
+            owner.add(cursor++, fraction);
+            lastRet = -1;
+            expectedModCount = owner.getModCount();
+        }
 
+        catch(final IndexOutOfBoundsException e) { throw new ConcurrentModificationException(); }
     }
 
     /**
@@ -215,11 +236,22 @@ public class myListIterator implements ListIterator<Fraction>
      *                                       prevents it from being added to this list
      * @throws IllegalArgumentException      if some aspect of the elements
      *                                       prevent them from being added to this list
-     * @since 25 September 2023
+     * @since 1 October 2023
      * @author Julian Edwards
      */
-    public void addAll(Fraction[] fractions) {
-        for(final Fraction fraction : fractions) add(fraction);
+    public void addAll(final Fraction[] fractions) {
+        if(fractions.length != 0) {
+            if(expectedModCount != owner.getModCount()) throw new ConcurrentModificationException();
+            try {
+                // it should be noted that Arrays::asList does not return a standard ArrayList, the one used here is an array wrapper
+                owner.addAll(cursor, Arrays.asList(fractions));
+                cursor += fractions.length;
+                lastRet = -1;
+                expectedModCount = owner.getModCount();
+            }
+
+            catch(final IndexOutOfBoundsException e) { throw new ConcurrentModificationException(); }
+        }
     }
 
     /**
@@ -235,17 +267,19 @@ public class myListIterator implements ListIterator<Fraction>
      *                                       {@code previous} have been called, or {@code remove} or
      *                                       {@code add} have been called after the last call to
      *                                       {@code next} or {@code previous}
-     * @since 25 September 2023
+     * @since 1 October 2023
      * @author Julian Edwards
      */
     public void removeAllNext() {
-        if(hasNext()) next(); // set cursor to next value, so the built-in remove method can be used.
-        else return; // no elements after current cursor, method cannot be called.
-        while(hasNext()) {  // remove all elements after the selected one.
-            next();
-            remove();
-        }
+        if(lastRet < 0) throw new IllegalStateException();
+        else if(expectedModCount != owner.getModCount()) throw new ConcurrentModificationException();
 
-        previous(); // set cursor back to the starting value (prior to this method being called).
+        if(lastRet >= owner.size() - 1) return; // no elements to be removed
+        lastRet++; // remove all elements after the selected one
+
+        while(lastRet < owner.size()) owner.remove(lastRet);
+        cursor = lastRet - 1;
+        lastRet = -1;
+        expectedModCount = owner.getModCount();
     }
 }
