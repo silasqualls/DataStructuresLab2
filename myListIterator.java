@@ -31,9 +31,10 @@ public class myListIterator implements ListIterator<Fraction>
      * @return {@code true} if the list iterator has more elements when
      * traversing the list in the forward direction
      */
+    // code by Mohamed
     @Override
     public boolean hasNext() {
-        return false;
+        return cursor < owner.size();
     }
 
     /**
@@ -65,9 +66,10 @@ public class myListIterator implements ListIterator<Fraction>
      * @return {@code true} if the list iterator has more elements when
      * traversing the list in the reverse direction
      */
-    @Override
+    // code by Mohamed
+     @Override
     public boolean hasPrevious() {
-        return false;
+        return cursor > 0;
     }
 
     /**
