@@ -104,12 +104,11 @@ import java.util.NoSuchElementException;
      * @return {@code true} if the list iterator has more elements when
      * traversing the list in the reverse direction
      */
-    @Override
-    //Code by Mohamed
+    //Code by Mohamed   
+@Override
     public boolean hasPrevious() {
-        return false;
+        return cursor > 0;
     }
-
     /**
      * Returns the previous element in the list and moves the cursor
      * position backwards.  This method may be called repeatedly to
