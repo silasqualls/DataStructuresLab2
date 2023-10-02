@@ -1,6 +1,11 @@
- public Fraction next() {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
+@Override
+    //Code By Herve
+    public Fraction next() {
+        if (cursor >= owner.size()) {
+            throw new NoSuchElementException("No next element");
         }
-        return myArrayList.get(cursor++);
+        int nextIndex = cursor;
+        lastRet = nextIndex;
+        cursor = nextIndex + 1;
+        return owner.get(nextIndex);
     }
