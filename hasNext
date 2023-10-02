@@ -1,0 +1,10 @@
+public boolean hasNext(){
+while(itr.hasNext(){
+system.our.println(itr.next());
+}
+}
+
+public boolean hasPrevious(){
+while(itr.hasPrevious(){
+system.our.println(itr.previous());
+}}
