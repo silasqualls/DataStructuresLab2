@@ -16,7 +16,7 @@ hasPrevious()
 Herve tasks:
 next()
 
-The myListIterator class is both inside myArrayList and there is a copy of it outside so it may be easier to look at / access.
+The myListIterator class is inside myArrayList, there is an older copy that is seperate from the myArrayList that was used for helping build the repository, but does not serve any purpose outside of that at this point.
 
 
 
